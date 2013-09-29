@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 import sys
+import os
+import glob
 import pygame
 import time
 import subprocess
-import os
 import pygame.camera
-import datetime
-
 
 
 def grab_images(imgcount):
@@ -21,7 +20,7 @@ def grab_images(imgcount):
         cam.start()
     except:
         print "Could not initialize camera"
-
+        sys.exit(1)
 
     for i in range(0, int(imgcount)):
         print '\r', i, '/', imgcount,
@@ -44,7 +43,8 @@ def launch_mencoder():
             '-ovc', 'lavc',
             '-lavcopts', 'vcodec=mpeg4:mbd=2:trell',
             '-oac', 'copy',
-            '-o', 'output.avi'
+            '-o', 'output.avi',
+            '-really-quiet'
             ],
         stdout=sys.stdout,
         stderr=sys.stderr
@@ -53,6 +53,11 @@ def launch_mencoder():
     retval = mencoder_proc.wait()
 
     print "Return value %s" % retval
+
+    os.chdir("tmpdir")
+    files = glob.glob("*.jpg")
+    for filename in files:
+        os.unlink(filename)
 
 
 def main():
@@ -67,4 +72,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
