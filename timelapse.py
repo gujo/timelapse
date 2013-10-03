@@ -9,10 +9,8 @@ import subprocess
 import pygame.camera
 
 
-def grab_images(imgcount):
+def grab_images(imgcount, delay):
     """Initialize camera and grab still images"""
-
-    print imgcount
 
     try:
         pygame.camera.init()
@@ -22,24 +20,24 @@ def grab_images(imgcount):
         print "Could not initialize camera"
         sys.exit(1)
 
-    for i in range(0, int(imgcount)):
+    for i in range(0, imgcount):
         print '\r', i, '/', imgcount,
         sys.stdout.flush()
         epoch = str(time.time())
         img = cam.get_image()
         pygame.image.save(img, "tmpdir/photo-" + epoch + ".jpg")
-        time.sleep(1)
+        time.sleep(delay)
 
     pygame.camera.quit()
 
 
-def launch_mencoder():
+def launch_mencoder(fps):
     """Launch mencoder with proper args"""
     mencoder_proc = subprocess.Popen(
         [
             'mencoder',
             'mf://tmpdir/*.jpg',
-            '-mf', 'w=800:h=600:fps=25:type=jpg',
+            '-mf', 'w=800:h=600:fps='+str(fps)+':type=jpg',
             '-ovc', 'lavc',
             '-lavcopts', 'vcodec=mpeg4:mbd=2:trell',
             '-oac', 'copy',
@@ -63,11 +61,11 @@ def launch_mencoder():
 def main():
     """Parse argv and launch functions"""
     if len(sys.argv) < 2:
-        sys.stderr.write("Usage: ./grab.py [number of images in time lapse]")
+        sys.stderr.write("Usage: ./grab.py [count] [delay] [fps]")
         sys.exit(1)
 
-    grab_images(sys.argv[1])
-    launch_mencoder()
+    grab_images(int(sys.argv[1]), int(sys.argv[2]))
+    launch_mencoder(int(sys.argv[3]))
 
 
 if __name__ == "__main__":
