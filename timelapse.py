@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 import sys
 import os
 import glob
@@ -8,6 +9,7 @@ import time
 import subprocess
 import pygame.camera
 import argparse
+
 
 def grab_images(imgcount, delay):
     """Initialize camera and grab still images"""
@@ -21,12 +23,14 @@ def grab_images(imgcount, delay):
         sys.exit(1)
 
     for i in range(0, imgcount):
-        print '\r', i, '/', imgcount,
+        print '\r', i + 1, '/', imgcount,
         sys.stdout.flush()
         epoch = str(time.time())
         img = cam.get_image()
         pygame.image.save(img, "tmpdir/photo-" + epoch + ".jpg")
         time.sleep(delay)
+
+    print ""
 
     pygame.camera.quit()
 
@@ -37,7 +41,7 @@ def launch_mencoder(fps, output):
         [
             'mencoder',
             'mf://tmpdir/*.jpg',
-            '-mf', 'w=800:h=600:fps='+str(fps)+':type=jpg',
+            '-mf', 'w=800:h=600:fps=' + str(fps) + ':type=jpg',
             '-ovc', 'lavc',
             '-lavcopts', 'vcodec=mpeg4:mbd=2:trell',
             '-oac', 'copy',
@@ -50,12 +54,12 @@ def launch_mencoder(fps, output):
 
     retval = mencoder_proc.wait()
 
-    print "Return value %s" % retval
-
     os.chdir("tmpdir")
     files = glob.glob("*.jpg")
     for filename in files:
         os.unlink(filename)
+
+    return retval
 
 
 def main():
@@ -65,7 +69,7 @@ def main():
     parser.add_argument('-c', '--count', type=int, required=True,
                         help='Number of images to grab')
 
-    parser.add_argument('-d', '--delay', type=int, default=1, 
+    parser.add_argument('-d', '--delay', type=int, default=1,
                         help='Delay between images, defaults to 1 sec')
 
     parser.add_argument('-f', '--fps',   type=int, default=25,
@@ -73,14 +77,13 @@ def main():
 
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='Output filename')
-    
-    args = parser.parse_args()
 
+    args = parser.parse_args()
 
     print "Grabbing images... "
     grab_images(args.count, args.delay)
 
-    print "Compiling Video"
+    print "Compiling Video..."
     launch_mencoder(args.fps, args.output)
 
 
