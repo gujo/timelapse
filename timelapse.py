@@ -7,7 +7,7 @@ import pygame
 import time
 import subprocess
 import pygame.camera
-
+import argparse
 
 def grab_images(imgcount, delay):
     """Initialize camera and grab still images"""
@@ -31,7 +31,7 @@ def grab_images(imgcount, delay):
     pygame.camera.quit()
 
 
-def launch_mencoder(fps):
+def launch_mencoder(fps, output):
     """Launch mencoder with proper args"""
     mencoder_proc = subprocess.Popen(
         [
@@ -41,7 +41,7 @@ def launch_mencoder(fps):
             '-ovc', 'lavc',
             '-lavcopts', 'vcodec=mpeg4:mbd=2:trell',
             '-oac', 'copy',
-            '-o', 'output.avi',
+            '-o', str(output),
             '-really-quiet'
             ],
         stdout=sys.stdout,
@@ -60,12 +60,28 @@ def launch_mencoder(fps):
 
 def main():
     """Parse argv and launch functions"""
-    if len(sys.argv) < 2:
-        sys.stderr.write("Usage: ./grab.py [count] [delay] [fps]")
-        sys.exit(1)
 
-    grab_images(int(sys.argv[1]), int(sys.argv[2]))
-    launch_mencoder(int(sys.argv[3]))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--count', type=int, required=True,
+                        help='Number of images to grab')
+
+    parser.add_argument('-d', '--delay', type=int, default=1, 
+                        help='Delay between images, defaults to 1 sec')
+
+    parser.add_argument('-f', '--fps',   type=int, default=25,
+                        help='Frames per second in movie, defaults to 25')
+
+    parser.add_argument('-o', '--output', type=str, required=True,
+                        help='Output filename')
+    
+    args = parser.parse_args()
+
+
+    print "Grabbing images... "
+    grab_images(args.count, args.delay)
+
+    print "Compiling Video"
+    launch_mencoder(args.fps, args.output)
 
 
 if __name__ == "__main__":
