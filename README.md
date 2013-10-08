@@ -10,13 +10,13 @@ Usage
 
 	optional arguments:
 	  -h, --help            show this help message and exit
-	    -c COUNT, --count COUNT
-	                            Number of images to grab
-				      -d DELAY, --delay DELAY
-				                              Delay between images, defaults to 1 sec
-							        -f FPS, --fps FPS     Frames per second in movie, defaults to 25
-								  -o OUTPUT, --output OUTPUT
-								                          Output filename
+	  -c COUNT, --count COUNT
+	                        Number of images to grab
+          -d DELAY, --delay DELAY
+				Delay between images, defaults to 1 sec
+	  -f FPS, --fps FPS     Frames per second in movie, defaults to 25
+	  -o OUTPUT, --output OUTPUT 
+	     	     	      	 Output filename
 
 Requires
 --------
