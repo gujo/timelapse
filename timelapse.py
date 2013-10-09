@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Grab images from webcam and make time lapse videos"""
 
 
 import sys
@@ -21,6 +22,9 @@ def grab_images(imgcount, delay):
     except:
         print "Could not initialize camera"
         sys.exit(1)
+
+    if not os.path.exists("tmpdir"):
+        os.makedirs("tmpdir")
 
     for i in range(0, imgcount):
         print '\r', i + 1, '/', imgcount,
