@@ -12,7 +12,7 @@ install:
   - sudo apt-get install python-pygame
 
 before_script:
-  - "pep8 --exclude=migrations --ignore=E501,E225 src"
-  - pyflakes -x W src
+  - "pep8 --exclude=migrations --ignore=E501,E225 timelapse.py"
+  - pyflakes -x W timelapse.py
 script:
-  - python -m py_compile src
+  - python -m py_compile timelapse.py
