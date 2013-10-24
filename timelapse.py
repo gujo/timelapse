@@ -76,7 +76,7 @@ def main():
     parser.add_argument('-d', '--delay', type=int, default=1,
                         help='Delay between images, defaults to 1 sec')
 
-    parser.add_argument('-f', '--fps',   type=int, default=25,
+    parser.add_argument('-f', '--fps', type=int, default=25,
                         help='Frames per second in movie, defaults to 25')
 
     parser.add_argument('-o', '--output', type=str, required=True,
