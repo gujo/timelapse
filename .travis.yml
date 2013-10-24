@@ -9,7 +9,7 @@ install:
   - pip install -r requirements.txt --use-mirrors
   - sudo apt-get update
   - sudo apt-get build-dep python-pygame
-  - sudo apt-get instsall python-dev
+  - sudo apt-get install python-dev
 before_script:
   - "pep8 --exclude=migrations --ignore=E501,E225 src"
   - pyflakes -x W src
