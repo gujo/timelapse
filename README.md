@@ -3,6 +3,8 @@ Timelapse.py
 
 Grab images from webcam and make time lapse videos
 
+[![Build Status](https://travis-ci.org/gujo/timelapse.png?branch=master)](https://travis-ci.org/gujo/timelapse)
+
 Usage
 -----
 
