@@ -4,5 +4,4 @@ glob
 pygame
 time
 subprocess
-pygame
 argparse
