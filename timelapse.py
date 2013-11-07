@@ -69,21 +69,41 @@ def launch_mencoder(fps, output):
 def main():
     """Parse argv and launch functions"""
 
+    # We can either use -d and -c and to determine how many images to grab and
+    # how often. Or we can use -t and -T and just give durations.
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--count', type=int, required=True,
+    group1 = parser.add_mutually_exclusive_group()
+    group2 = parser.add_mutually_exclusive_group()
+
+    group1.add_argument('-c', '--count', type=int, required=False,
                         help='Number of images to grab')
 
-    parser.add_argument('-d', '--delay', type=int, default=1,
+    group2.add_argument('-d', '--delay', type=int, default=1,
                         help='Delay between images, defaults to 1 sec')
 
     parser.add_argument('-f', '--fps', type=int, default=25,
                         help='Frames per second in movie, defaults to 25')
 
-    parser.add_argument('-o', '--output', type=str, required=True,
+    parser.add_argument('-o', '--output', type=str, required=False,
                         help='Output filename')
+
+    group2.add_argument('-t', '--inputtime', type=str, required=False,
+                        help='Duration of image grabbing (seconds)')
+
+    group1.add_argument('-T', '--outputtime', type=str, required=False,
+                        help='Time of the produced video file (seconds)')
 
     args = parser.parse_args()
 
+    if args.count:
+        count = args.count
+        delay = args.delay
+    elif args.outputtime:
+        count = int(args.outputtime) * int(args.fps)
+        delay = int(args.inputtime) / int(count)
+
+    print "Will grab " + str(count) + " images with " + str(delay) + "s delay"
     print "Grabbing images... "
     grab_images(args.count, args.delay)
 
