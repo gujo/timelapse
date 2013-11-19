@@ -31,7 +31,10 @@ def grab_images(imgcount, delay):
         sys.stdout.flush()
         epoch = str(time.time())
         img = cam.get_image()
-        pygame.image.save(img, "tmpdir/photo-" + epoch + ".jpg")
+        try:
+            pygame.image.save(img, "tmpdir/photo-" + epoch + ".jpg")
+        except:
+            sys.stderr.write("Could not write: tmpdir/photo-" + epoch + ".jpg")
         time.sleep(delay)
 
     print ""
@@ -39,13 +42,14 @@ def grab_images(imgcount, delay):
     pygame.camera.quit()
 
 
-def launch_mencoder(fps, output):
+def launch_mencoder(fps, output, width, height):
     """Launch mencoder with proper args"""
     mencoder_proc = subprocess.Popen(
         [
             'mencoder',
             'mf://tmpdir/*.jpg',
-            '-mf', 'w=800:h=600:fps=' + str(fps) + ':type=jpg',
+            '-mf', 'w=' + str(width) + ':h=' + str(height) + ':fps=' + \
+                str(fps) + ':type=jpg',
             '-ovc', 'lavc',
             '-lavcopts', 'vcodec=mpeg4:mbd=2:trell',
             '-oac', 'copy',
@@ -85,8 +89,14 @@ def main():
     parser.add_argument('-f', '--fps', type=int, default=25,
                         help='Frames per second in movie, defaults to 25')
 
-    parser.add_argument('-o', '--output', type=str, required=False,
+    parser.add_argument('-o', '--output', type=str, required=True,
                         help='Output filename')
+
+    parser.add_argument('-w', '--width', type=int, default=800,
+                       help='Image Width')
+
+    parser.add_argument('-H', '--height', type=int, default=600,
+                        help='Image height')
 
     group2.add_argument('-t', '--inputtime', type=str, required=False,
                         help='Duration of image grabbing (seconds)')
@@ -108,7 +118,7 @@ def main():
     grab_images(args.count, args.delay)
 
     print "Compiling Video..."
-    launch_mencoder(args.fps, args.output)
+    launch_mencoder(args.fps, args.output, args.width, args.height)
 
 
 if __name__ == "__main__":
