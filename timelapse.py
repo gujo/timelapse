@@ -48,8 +48,8 @@ def launch_mencoder(fps, output, width, height):
         [
             'mencoder',
             'mf://tmpdir/*.jpg',
-            '-mf', 'w=' + str(width) + ':h=' + str(height) + ':fps=' + \
-                str(fps) + ':type=jpg',
+            '-mf', 'w=' + str(width) + ':h=' + str(height) + ':fps=' +
+            str(fps) + ':type=jpg',
             '-ovc', 'lavc',
             '-lavcopts', 'vcodec=mpeg4:mbd=2:trell',
             '-oac', 'copy',
@@ -93,7 +93,7 @@ def main():
                         help='Output filename')
 
     parser.add_argument('-w', '--width', type=int, default=800,
-                       help='Image Width')
+                        help='Image Width')
 
     parser.add_argument('-H', '--height', type=int, default=600,
                         help='Image height')
